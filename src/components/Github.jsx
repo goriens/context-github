@@ -42,6 +42,8 @@ const githubReducer = (state, action) => {
 };
 
 export const Github = () => {
+  const [query, setQuery] = useState("goriens");
+  //  console.log(query);
   const [{ loading, error, data }, dispatch] = useReducer(
     githubReducer,
     initialState
@@ -54,7 +56,7 @@ export const Github = () => {
     axios({
       url: "https://api.github.com/search/users",
       params: {
-        q: "masai",
+        q: query,
       },
     })
       .then((response) => {
@@ -68,8 +70,11 @@ export const Github = () => {
           type: GithubActions.failure,
         });
       });
-  }, []);
+  }, [query]);
   //  console.log(data);
+  const handleClick = (query) => {
+    setQuery(query);
+  };
 
   return (
     <Stack spacing={2} sx={{ width: "600px", margin: "auto" }}>
@@ -83,11 +88,13 @@ export const Github = () => {
           label="Search Github Users"
           placeholder="Type..."
           color="secondary"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
         />
         <Button
           color="secondary"
           variant="contained"
-          onClick={(e) => setQuery(e.target.value)}
+          onClick={() => handleClick}
         >
           Search
         </Button>
